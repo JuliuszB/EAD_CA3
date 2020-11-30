@@ -1,18 +1,18 @@
-﻿@page "/newsPage"
+﻿@page "/NewsArticles"
 @inject HttpClient Http
 @using System.Runtime.Serialization;
 @using System.Net;
 <h1>Blazor App CA 3</h1>
 
-<h3>News Articles</h3>
+<h3>News Articles - component to fetch data from a server</h3>
 
-@if(data == null)
+@if (data == null)
 {
     <p> Loading..</p>
 }
 else
 {
-    @if(found)
+    @if (found)
     {
         //News article goes here
     }
@@ -30,12 +30,13 @@ else
     {
         try
         {
-            string url = "http://newsapi.org/v2/top-headlines?country="+country+"&apiKey=6901d317102e4ebba09bb241fdb3c16b";
+            string url = "http://newsapi.org/v2/top-headlines?country=" + country + "&apiKey=6901d317102e4ebba09bb241fdb3c16b";
             data = await Http.GetFromJsonAsync<Root>(url);
             found = true;
 
         }
-        catch (Exception e) {
+        catch (Exception e)
+        {
             Console.WriteLine(e.Message);
             throw e;
         }
@@ -44,7 +45,7 @@ else
 
     public class Source
     {
-        public IList<undefined> id { get; set; }
+        public IList<string> id { get; set; }
         public string name { get; set; }
 
     }
