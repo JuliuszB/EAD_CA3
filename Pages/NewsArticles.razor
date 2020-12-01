@@ -4,7 +4,7 @@
 @using System.Net;
 <h1>Blazor App CA 3</h1>
 
-<h3>News Articles - Top Headlines</h3>
+<h3 style="text-align:center">News Articles - Top Headlines</h3>
 
 @if (data == null)
 {
@@ -15,12 +15,23 @@ else
     @if (found)
     {
         //News article goes here
-<div>
-    Title :  @data.articles.ElementAt(1).title
+        @for (int i = 0; i <data.articles.Count; i++)
+        {    
+<div class="container">
+    <div class="row">
+        <article>
+            <a href="@data.articles.ElementAt(i).url" style="text-decoration:none">
+                <img src="@data.articles.ElementAt(i).urlToImage" alt="Article Pic" height="320" width="320" style="float:left; padding:1em"> </a>
+                <a href="@data.articles.ElementAt(i).url" style="text-decoration:none"> <h3>@data.articles.ElementAt(i).title</h3> </a>
+                <p style="font-size:130%;font-style:italic">@data.articles.ElementAt(i).description</p>
+                <p style="font-size:125%">@data.articles.ElementAt(i).content</p>
+                <h4>By : @data.articles.ElementAt(i).author</h4>
+                <h4>Published @data.articles.ElementAt(i).publishedAt</h4>
+</article>
+    </div>
+    <hr class="solid">
 </div>
-<div>
-    desc :  @data.articles.ElementAt(1).description
-</div>
+        }
     }
     else
     {
