@@ -1,10 +1,11 @@
 ﻿@page "/NewsArticles"
 @inject HttpClient Http
+@inject NavigationManager uriHelper;
 @using System.Runtime.Serialization;
 @using System.Net;
 <h1>Blazor App CA 3</h1>
 
-<h3 style="text-align:center">News Articles - Top Headlines</h3>
+<h3 style="text-align:center">News Articles @newsType</h3>
 
 @if (data == null)
 {
@@ -14,29 +15,119 @@ else
 {
     @if (found)
     {
+
+
+        //This dropdown lets the user select from news articles by english speaking countries
+        <div class="dropdown">
+            <button class="dropbtn">Select by country</button>
+            <div class="dropdown-content">
+                <a @onclick="changeCountryUS">United States</a>
+                <a @onclick="changeCountryIE">Ireland</a>
+                <a @onclick="changeCountryUK">United Kingdom</a>
+                <a @onclick="changeCountryAU">Australia</a>
+                <a @onclick="changeCountryCA">Canada</a>
+                <a @onclick="changeCountryNZ">New Zealand</a>
+            </div>
+        </div>
+
+        <div class="dropdown">
+            <button class="dropbtn" >Select by category</button>
+            <div class="dropdown-content">
+                <a @onclick="changeCategoryGeneral">General</a>
+                <a @onclick="changeCategoryBusiness">Business</a>
+                <a @onclick="changeCategorySport">Sport</a>
+                <a @onclick="changeCategoryEntertainment">Entertainment</a>
+                <a @onclick="changeCategoryHealth">Health</a>
+                <a @onclick="changeCategoryScience">Science</a>
+                <a @onclick="changeCategoryTechnology">Technology</a>
+            </div>
+        </div>
+
+
+
         //News article goes here
-        @for (int i = 0; i <data.articles.Count; i++)
-        {    
-<div class="container">
-    <div class="row">
-        <article>
-            <a href="@data.articles.ElementAt(i).url" style="text-decoration:none">
-                <img src="@data.articles.ElementAt(i).urlToImage" alt="Article Pic" height="320" width="320" style="float:left; padding:1em"> </a>
-                <a href="@data.articles.ElementAt(i).url" style="text-decoration:none"> <h3>@data.articles.ElementAt(i).title</h3> </a>
-                <p style="font-size:130%;font-style:italic">@data.articles.ElementAt(i).description</p>
-                <p style="font-size:125%">@data.articles.ElementAt(i).content</p>
-                <h4>By : @data.articles.ElementAt(i).author</h4>
-                <h4>Published @data.articles.ElementAt(i).publishedAt</h4>
-</article>
-    </div>
-    <hr class="solid">
-</div>
+        @for (int i = 0; i < data.articles.Count; i++)
+        {
+            <div class="container">
+                <div class="row">
+                    <article>
+                        <!--This column holds the picture with a url link to the article -->
+                        <div class="column">
+                            <a href="@data.articles.ElementAt(i).url" style="text-decoration:none">
+                                <img src="@data.articles.ElementAt(i).urlToImage" alt="Picture missing" height="320" width="320" style="float:left; padding:1em">
+                            </a>
+                        </div>
+                        <!--This column holds the article -->
+                        <div class="column">
+                            <a href="@data.articles.ElementAt(i).url" style="text-decoration:none"> <h3>@data.articles.ElementAt(i).title</h3> </a>
+
+                            <p style="font-size:130%;font-style:italic">@data.articles.ElementAt(i).description</p>
+                            <p style="font-size:125%">@data.articles.ElementAt(i).content</p>
+                            <h4>By : @data.articles.ElementAt(i).author</h4>
+                            <h4>Published @data.articles.ElementAt(i).publishedAt</h4>
+                        </div>
+                    </article>
+                </div>
+                <hr class="solid">
+            </div>
         }
     }
     else
     {
         @errorMsg
     }
+
+    <!-- CSS -->
+    <style>
+        /*CSS for dropdown buttons gotten from https://www.w3schools.com/howto/howto_css_dropdown.asp */
+        /* Dropdown Button */
+        .dropbtn {
+            background-color: #5cb6e0;
+            color: white;
+            padding: 16px;
+            font-size: 16px;
+            border: none;
+        }
+
+        /* The container div - needed to position the dropdown content */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Dropdown Content (Hidden by Default) */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f1f1f1;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+            /* Links inside the dropdown */
+            .dropdown-content a {
+                color: black;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+            }
+
+                /* Change color of dropdown links on hover */
+                .dropdown-content a:hover {
+                    background-color: #ddd;
+                }
+
+        /* Show the dropdown menu on hover */
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Change the background color of the dropdown button when the dropdown content is shown */
+        .dropdown:hover .dropbtn {
+            background-color: #4d9bbf;
+        }
+    </style>
 }
 
 
@@ -45,8 +136,10 @@ else
     //Vars
     private Application data;
     private string country = "ie";
+    private string category = "";
     private bool found;
     private string errorMsg;
+    private string newsType = "";
 
     //Lifecycle method
     private async Task getNewsArticlesAsync()
@@ -54,8 +147,8 @@ else
         //Try catch block to handle exceptions
         try
         {
-            //News API found at https://github.com/public-apis/public-apis#news --> https://newsapi.org/
-            string url = "https://newsapi.org/v2/top-headlines?country=" + country + "&apiKey=6901d317102e4ebba09bb241fdb3c16b";
+            //News API found at https://github.com/public-apis/public-apis#news -> https://newsapi.org/
+            string url = "https://newsapi.org/v2/top-headlines?country=" + country + "&" + category + "apiKey=6901d317102e4ebba09bb241fdb3c16b";
             data = await Http.GetFromJsonAsync<Application>(url);
             found = true;
             errorMsg = string.Empty;
@@ -101,4 +194,96 @@ else
         public IList<Articles> articles { get; set; }
 
     }
+    public async void changeCountryUS()
+    {
+        country = "us";
+        await getNewsArticlesAsync();
+        StateHasChanged();
+    }
+
+    public async void changeCountryIE()
+    {
+        country = "ie";
+        await getNewsArticlesAsync();
+        StateHasChanged();
+    }
+
+    public async void changeCountryUK()
+    {
+        country = "gb";
+        await getNewsArticlesAsync();
+        StateHasChanged();
+    }
+
+    public async void changeCountryCA()
+    {
+        country = "ca";
+        await getNewsArticlesAsync();
+        StateHasChanged();
+    }
+    public async void changeCountryAU()
+    {
+        country = "au";
+        await getNewsArticlesAsync();
+        StateHasChanged();
+
+    }
+    public async void changeCountryNZ()
+    {
+        country = "nz";
+        await getNewsArticlesAsync();
+        StateHasChanged();
+
+    }
+    //
+    public async void changeCategoryGeneral()
+    {
+        category = "category=general&";
+        newsType = " - Top Headlines";
+        await getNewsArticlesAsync();
+        StateHasChanged();
+    }
+    public async void changeCategoryBusiness()
+    {
+        category = "category=business&";
+        newsType = " - Business";
+        await getNewsArticlesAsync();
+        StateHasChanged();
+    }
+    public async void changeCategorySport()
+    {
+        category = "category=sport&";
+        newsType = " - Sport";
+        await getNewsArticlesAsync();
+        StateHasChanged();
+    }
+    public async void changeCategoryEntertainment()
+    {
+        category = "category=entertainment&";
+        newsType = " - Entertainment";
+        await getNewsArticlesAsync();
+        StateHasChanged();
+    }
+    public async void changeCategoryHealth()
+    {
+        category = "category=health&";
+        newsType = " - Health";
+        await getNewsArticlesAsync();
+        StateHasChanged();
+    }
+    public async void changeCategoryScience()
+    {
+        category = "category=science&";
+        newsType = " - Science";
+        await getNewsArticlesAsync();
+        StateHasChanged();
+    }
+    public async void changeCategoryTechnology()
+    {
+        category = "category=technology&";
+        newsType = " - Technology";
+        await getNewsArticlesAsync();
+        StateHasChanged();
+    }
+
 }
