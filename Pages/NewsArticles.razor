@@ -21,25 +21,25 @@ else
         <div class="dropdown">
             <button class="dropbtn">Select by country</button>
             <div class="dropdown-content">
-                <a @onclick="changeCountryUS">United States</a>
-                <a @onclick="changeCountryIE">Ireland</a>
-                <a @onclick="changeCountryUK">United Kingdom</a>
-                <a @onclick="changeCountryAU">Australia</a>
-                <a @onclick="changeCountryCA">Canada</a>
-                <a @onclick="changeCountryNZ">New Zealand</a>
+                <a @onclick="@(() => changeCountryAll("us"))">United States</a>
+                <a @onclick="@(() => changeCountryAll("ie"))">Ireland</a>
+                <a @onclick="@(() => changeCountryAll("gb"))">United Kingdom</a>
+                <a @onclick="@(() => changeCountryAll("au"))">Australia</a>
+                <a @onclick="@(() => changeCountryAll("ca"))">Canada</a>
+                <a @onclick="@(() => changeCountryAll("nz"))">New Zealand</a>
             </div>
         </div>
 
         <div class="dropdown">
             <button class="dropbtn" >Select by category</button>
             <div class="dropdown-content">
-                <a @onclick="changeCategoryGeneral">General</a>
-                <a @onclick="changeCategoryBusiness">Business</a>
-                <a @onclick="changeCategorySport">Sport</a>
-                <a @onclick="changeCategoryEntertainment">Entertainment</a>
-                <a @onclick="changeCategoryHealth">Health</a>
-                <a @onclick="changeCategoryScience">Science</a>
-                <a @onclick="changeCategoryTechnology">Technology</a>
+                <a @onclick="@(() => changeCategory("category=general&", " - Top Headlines"))">Top Headlines</a>
+                <a @onclick="@(() => changeCategory("category=business&", " - Business"))">Business</a>
+                <a @onclick="@(() => changeCategory("category=sport&", " - Sport"))">Sport</a>
+                <a @onclick="@(() => changeCategory("category=entertainment&", " - Entertainment"))">Entertainment</a>
+                <a @onclick="@(() => changeCategory("category=health&", " - Health"))">Health</a>
+                <a @onclick="@(() => changeCategory("category=science&", " - Science"))">Science</a>
+                <a @onclick="@(() => changeCategory("category=technology&", " - Technology"))">Technology</a>
             </div>
         </div>
 
@@ -194,96 +194,19 @@ else
         public IList<Articles> articles { get; set; }
 
     }
-    public async void changeCountryUS()
+   
+   // Two methods for selecting by country and by category 
+    public async void changeCountryAll(string countryIN)
     {
-        country = "us";
+        country = countryIN;
         await getNewsArticlesAsync();
         StateHasChanged();
     }
-
-    public async void changeCountryIE()
+    public async void changeCategory(string categoryIN, string newsTypeIN)
     {
-        country = "ie";
+        category = categoryIN;
+        newsType = newsTypeIN;
         await getNewsArticlesAsync();
         StateHasChanged();
     }
-
-    public async void changeCountryUK()
-    {
-        country = "gb";
-        await getNewsArticlesAsync();
-        StateHasChanged();
-    }
-
-    public async void changeCountryCA()
-    {
-        country = "ca";
-        await getNewsArticlesAsync();
-        StateHasChanged();
-    }
-    public async void changeCountryAU()
-    {
-        country = "au";
-        await getNewsArticlesAsync();
-        StateHasChanged();
-
-    }
-    public async void changeCountryNZ()
-    {
-        country = "nz";
-        await getNewsArticlesAsync();
-        StateHasChanged();
-
-    }
-    //
-    public async void changeCategoryGeneral()
-    {
-        category = "category=general&";
-        newsType = " - Top Headlines";
-        await getNewsArticlesAsync();
-        StateHasChanged();
-    }
-    public async void changeCategoryBusiness()
-    {
-        category = "category=business&";
-        newsType = " - Business";
-        await getNewsArticlesAsync();
-        StateHasChanged();
-    }
-    public async void changeCategorySport()
-    {
-        category = "category=sport&";
-        newsType = " - Sport";
-        await getNewsArticlesAsync();
-        StateHasChanged();
-    }
-    public async void changeCategoryEntertainment()
-    {
-        category = "category=entertainment&";
-        newsType = " - Entertainment";
-        await getNewsArticlesAsync();
-        StateHasChanged();
-    }
-    public async void changeCategoryHealth()
-    {
-        category = "category=health&";
-        newsType = " - Health";
-        await getNewsArticlesAsync();
-        StateHasChanged();
-    }
-    public async void changeCategoryScience()
-    {
-        category = "category=science&";
-        newsType = " - Science";
-        await getNewsArticlesAsync();
-        StateHasChanged();
-    }
-    public async void changeCategoryTechnology()
-    {
-        category = "category=technology&";
-        newsType = " - Technology";
-        await getNewsArticlesAsync();
-        StateHasChanged();
-    }
-
 }
