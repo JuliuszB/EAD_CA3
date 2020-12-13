@@ -3,10 +3,11 @@
 @inject NavigationManager uriHelper;
 @using System.Runtime.Serialization;
 @using System.Net;
-<h1>Blazor App CA 3</h1>
 
-<h3 style="text-align:center">News Articles @newsType</h3>
 
+<h3 style="text-align:center">News articles from @newsFromCountry @newsType</h3>
+
+<!-- If the data doens't load immediately, it will show the P tag-->
 @if (data == null)
 {
     <p> Loading..</p>
@@ -17,21 +18,22 @@ else
     {
 
 
-        //This dropdown lets the user select from news articles by english speaking countries
+        //This dropdown lets the user select from news articles by English speaking countries
         <div class="dropdown">
             <button class="dropbtn">Select by country</button>
             <div class="dropdown-content">
-                <a @onclick="@(() => changeCountryAll("us"))">United States</a>
-                <a @onclick="@(() => changeCountryAll("ie"))">Ireland</a>
-                <a @onclick="@(() => changeCountryAll("gb"))">United Kingdom</a>
-                <a @onclick="@(() => changeCountryAll("au"))">Australia</a>
-                <a @onclick="@(() => changeCountryAll("ca"))">Canada</a>
-                <a @onclick="@(() => changeCountryAll("nz"))">New Zealand</a>
+                <a @onclick="@(() => changeCountryAll("us", "United States"))">United States</a>
+                <a @onclick="@(() => changeCountryAll("ie", "Ireland"))">Ireland</a>
+                <a @onclick="@(() => changeCountryAll("gb", "United Kingdom"))">United Kingdom</a>
+                <a @onclick="@(() => changeCountryAll("au", "Australia"))">Australia</a>
+                <a @onclick="@(() => changeCountryAll("ca", "Canada"))">Canada</a>
+                <a @onclick="@(() => changeCountryAll("nz", "New Zealand"))">New Zealand</a>
             </div>
         </div>
-
+        <!-- This dropdown lets the user select which category of news they want to receive.
+            It also sends the corresponding string to display in the page for each category-->
         <div class="dropdown">
-            <button class="dropbtn" >Select by category</button>
+            <button class="dropbtn">Select by category</button>
             <div class="dropdown-content">
                 <a @onclick="@(() => changeCategory("category=general&", " - Top Headlines"))">Top Headlines</a>
                 <a @onclick="@(() => changeCategory("category=business&", " - Business"))">Business</a>
@@ -45,27 +47,27 @@ else
 
 
 
-        //News article goes here
+        //News article inside a for loop, loops through each article and prints out to the screen
         @for (int i = 0; i < data.articles.Count; i++)
         {
             <div class="container">
                 <div class="row">
                     <article>
                         <!--This column holds the picture with a url link to the article -->
-                        <div class="column">
-                            <a href="@data.articles.ElementAt(i).url" style="text-decoration:none">
-                                <img src="@data.articles.ElementAt(i).urlToImage" alt="Picture missing" height="320" width="320" style="float:left; padding:1em">
-                            </a>
-                        </div>
-                        <!--This column holds the article -->
-                        <div class="column">
-                            <a href="@data.articles.ElementAt(i).url" style="text-decoration:none"> <h3>@data.articles.ElementAt(i).title</h3> </a>
+                        <!--<div class="column">-->
+                        <a href="@data.articles.ElementAt(i).url" style="text-decoration:none">
+                            <img class="piclink" src="@data.articles.ElementAt(i).urlToImage" alt="Picture missing" height="320" width="320" style="float:left; padding:1em;margin:1.5em">
+                        </a>
+                        <!--</div>-->
+                        <!--This column holds the article itself. Title, description, the page content, author and publish date-->
+                        <!--<div class="column">-->
+                        <a href="@data.articles.ElementAt(i).url" style="text-decoration:none"> <h3 class="headline">@data.articles.ElementAt(i).title</h3> </a>
 
-                            <p style="font-size:130%;font-style:italic">@data.articles.ElementAt(i).description</p>
-                            <p style="font-size:125%">@data.articles.ElementAt(i).content</p>
-                            <h4>By : @data.articles.ElementAt(i).author</h4>
-                            <h4>Published @data.articles.ElementAt(i).publishedAt</h4>
-                        </div>
+                        <p style="font-size:130%;font-style:italic">@data.articles.ElementAt(i).description</p>
+                        <p style="font-size:125%">@data.articles.ElementAt(i).content</p>
+                        <p>By : @data.articles.ElementAt(i).author</p>
+                        <p>Published @data.articles.ElementAt(i).publishedAt</p>
+                        <!--</div>-->
                     </article>
                 </div>
                 <hr class="solid">
@@ -127,19 +129,35 @@ else
         .dropdown:hover .dropbtn {
             background-color: #4d9bbf;
         }
+        /*This is some CSS styling I wrote for the images of articles*/
+        .piclink {
+            border-radius: 15px;
+            padding: 0.5em;
+            box-shadow: 5em;
+        }
+            .piclink:hover {
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+                padding: 0.5em;
+            }
+        /*This pops the headline out when hovering*/
+        .headline:hover {
+            font-size: 180%;
+            text-shadow: 2px 2px 4px #808080;
+        }
     </style>
 }
 
-
+<!-- Variables and methods code-->
 @code {
 
-    //Vars
+    //Variables
     private Application data;
     private string country = "ie";
     private string category = "";
     private bool found;
     private string errorMsg;
-    private string newsType = "";
+    private string newsType = " - Top Headlines";
+    private string newsFromCountry = "Ireland";
 
     //Lifecycle method
     private async Task getNewsArticlesAsync()
@@ -194,14 +212,19 @@ else
         public IList<Articles> articles { get; set; }
 
     }
-   
-   // Two methods for selecting by country and by category 
-    public async void changeCountryAll(string countryIN)
+
+    /* Two methods for selecting by country and by category.
+    changeCountryAll() takes in the country from which articles will be shown
+    and the country display name for the top of the page*/
+    public async void changeCountryAll(string countryIN, string newsFromCountryIN)
     {
+        newsFromCountry = newsFromCountryIN;
         country = countryIN;
         await getNewsArticlesAsync();
         StateHasChanged();
     }
+    /*
+    changeCategory() takes in the category type of news, and the category display name*/
     public async void changeCategory(string categoryIN, string newsTypeIN)
     {
         category = categoryIN;
