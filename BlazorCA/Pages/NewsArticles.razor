@@ -160,6 +160,33 @@ else
     private string newsType = " - Top Headlines";
     private string newsFromCountry = "Ireland";
 
+    //Getter for category string
+    public string Category
+    {
+        get { return category; }
+
+    }
+
+    //Getter for country string
+    public string Country
+    {
+        get { return country; }
+
+    }
+    //Getter for newsType string
+    public string NewsType
+    {
+        get { return newsType; }
+
+    }
+    //Getter for newsFromCountry string
+    public string NewsFromCountry
+    {
+        get { return newsFromCountry; }
+
+    }
+
+
     //Lifecycle method
     private async Task getNewsArticlesAsync()
     {
