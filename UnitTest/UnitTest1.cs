@@ -17,11 +17,11 @@ namespace UnitTest
             ArticlePage.changeCategory("category=sport&", " - Sport");
             string categoryAfter = ArticlePage.Category;
             string newsTypeAfter = ArticlePage.NewsType;
-            Assert.AreEqual(categorybefore,"");
-            Assert.AreEqual(categoryAfter, "category=sport&");
+            Assert.AreEqual("",categorybefore);
+            Assert.AreEqual("category=sport&",categoryAfter );
 
-            Assert.AreEqual(newsTypeBefore, " - Top Headlines");
-            Assert.AreEqual(newsTypeAfter, " - Sport");
+            Assert.AreEqual(" - Top Headlines",newsTypeBefore );
+            Assert.AreEqual(" - Sport",newsTypeAfter );
         }
 
         [TestMethod]
@@ -36,11 +36,11 @@ namespace UnitTest
             ArticlePage.changeCategory("category=health&", " - Health");
             string categoryAfter = ArticlePage.Category;
             string newsTypeAfter = ArticlePage.NewsType;
-            Assert.AreEqual(categorybefore, "");
-            Assert.AreEqual(categoryAfter, "category=health&");
+            Assert.AreEqual("",categorybefore);
+            Assert.AreEqual("category=health&",categoryAfter);
 
-            Assert.AreEqual(newsTypeBefore, " - Top Headlines");
-            Assert.AreEqual(newsTypeAfter, " - Health");
+            Assert.AreEqual(" - Top Headlines",newsTypeBefore);
+            Assert.AreEqual(" - Health",newsTypeAfter );
         }
 
         [TestMethod]
@@ -55,10 +55,10 @@ namespace UnitTest
             ArticlePage.changeCountryAll("us", "United States");
             string countryAfter = ArticlePage.Country;
             string newsFromCountryAfter = ArticlePage.NewsFromCountry;
-            Assert.AreEqual(countrybefore, "ie");
-            Assert.AreEqual(countryAfter, "us");
-            Assert.AreEqual(newsFromCountryBefore, "Ireland");
-            Assert.AreEqual(newsFromCountryAfter, "United States");
+            Assert.AreEqual("ie",countrybefore );
+            Assert.AreEqual("us", countryAfter);
+            Assert.AreEqual("Ireland",newsFromCountryBefore);
+            Assert.AreEqual("United States",newsFromCountryAfter);
         }
 
         [TestMethod]
@@ -73,10 +73,10 @@ namespace UnitTest
             ArticlePage.changeCountryAll("ca", "Canada");
             string countryAfter = ArticlePage.Country;
             string newsFromCountryAfter = ArticlePage.NewsFromCountry;
-            Assert.AreEqual(countrybefore, "ie");
-            Assert.AreEqual(countryAfter, "ca");
-            Assert.AreEqual(newsFromCountryBefore, "Ireland");
-            Assert.AreEqual(newsFromCountryAfter, "Canada");
+            Assert.AreEqual("ie",countrybefore);
+            Assert.AreEqual("ca",countryAfter);
+            Assert.AreEqual("Ireland",newsFromCountryBefore);
+            Assert.AreEqual("Canada",newsFromCountryAfter );
         }
     }
 }
